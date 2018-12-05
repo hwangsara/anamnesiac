@@ -7,7 +7,7 @@ import { RouterModule } from '@angular/router';
 import { FilterPipeModule } from 'ngx-filter-pipe';
 
 import { CharacterListPage } from './character-list.page';
-import { CharacterModal, CharacterSortPopover } from './character-list.ui';
+import { CharacterSortPopover } from './character-list.ui';
 
 @NgModule({
   imports: [
@@ -22,7 +22,7 @@ import { CharacterModal, CharacterSortPopover } from './character-list.ui';
       }
     ])
   ],
-  entryComponents: [CharacterModal, CharacterSortPopover],
-  declarations: [CharacterListPage, CharacterModal, CharacterSortPopover]
+  entryComponents: [CharacterSortPopover],
+  declarations: [CharacterListPage, CharacterSortPopover]
 })
 export class CharacterListPageModule {}

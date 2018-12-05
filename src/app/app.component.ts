@@ -1,14 +1,15 @@
 import { filter } from 'rxjs/operators';
 
-import { Component, ViewChild, HostListener } from '@angular/core';
+import { Component, ViewChild, ChangeDetectorRef } from '@angular/core';
 
-import { Platform, ModalController, Toggle } from '@ionic/angular';
+import { Platform, ModalController, Menu } from '@ionic/angular';
 import { SplashScreen } from '@ionic-native/splash-screen/ngx';
 import { StatusBar } from '@ionic-native/status-bar/ngx';
 import { Router, NavigationEnd } from '@angular/router';
 
 import { DataService } from './data.service';
 import { LocalStorage } from 'ngx-webstorage';
+import { Character } from './models/character';
 
 interface Page {
   title: string;
@@ -43,17 +44,23 @@ export class AppComponent {
 
   public a2hsPrompt: any;
 
+  @ViewChild('characterDisplay')
+  public characterDisplay: Menu;
+  public currentlyDisplayedCharacter: Character;
+
   constructor(
     private dataService: DataService,
     private platform: Platform,
     private splashScreen: SplashScreen,
     private modalCtrl: ModalController,
     private statusBar: StatusBar,
-    private router: Router
+    private router: Router,
+    private cdr: ChangeDetectorRef
   ) {
     this.initializeApp();
     this.loadRootData();
     this.watchRouteChanges();
+    this.watchContentSelections();
   }
 
   public a2hs() {
@@ -162,5 +169,23 @@ export class AppComponent {
       .subscribe((x: NavigationEnd) => {
         this.activePage = x.url.split('?')[0];
       });
+  }
+
+  private watchContentSelections() {
+    this.dataService.displayCharacter$.subscribe(char => {
+      this.currentlyDisplayedCharacter = char;
+      this.cdr.detectChanges();
+
+      if(char) {
+        this.characterDisplay.disabled = false;
+        this.characterDisplay.open();
+      }
+    });
+  }
+
+  public closeCharacter() {
+    this.currentlyDisplayedCharacter = null;
+    this.characterDisplay.disabled = true;
+    this.characterDisplay.close();
   }
 }

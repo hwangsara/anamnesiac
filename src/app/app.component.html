@@ -1,5 +1,6 @@
 <ion-app>
   <ion-split-pane>
+
     <ion-menu>
 
       <ion-header>
@@ -49,5 +50,11 @@
     </ion-menu>
 
     <ion-router-outlet main></ion-router-outlet>
+
+    <ion-menu #characterDisplay side="end" disabled="true" type="push">
+      <app-character-display [character]="currentlyDisplayedCharacter" 
+                             (close)="closeCharacter()"
+                             *ngIf="currentlyDisplayedCharacter"></app-character-display>
+    </ion-menu>
   </ion-split-pane>
 </ion-app>

@@ -14,9 +14,10 @@ import { AppRoutingModule } from './app-routing.module';
 import { ServiceWorkerModule } from '@angular/service-worker';
 import { environment } from '../environments/environment';
 import { DataService } from './data.service';
+import { CharacterDisplayComponent } from './character-list/character-display.component';
 
 @NgModule({
-  declarations: [AppComponent],
+  declarations: [AppComponent, CharacterDisplayComponent],
   entryComponents: [],
   imports: [
     BrowserModule,

@@ -4,13 +4,13 @@ import { Subscription } from 'rxjs';
 import { filter } from 'rxjs/operators';
 import { LocalStorage, LocalStorageService } from 'ngx-webstorage';
 
-import { ModalController, PopoverController } from '@ionic/angular';
+import { PopoverController } from '@ionic/angular';
 import { Component, OnInit, OnDestroy } from '@angular/core';
 import { Router, NavigationEnd, ActivatedRoute } from '@angular/router';
 
 import { DataService } from '../data.service';
 import { Character } from '../models/character';
-import { CharacterSortPopover, CharacterModal } from './character-list.ui';
+import { CharacterSortPopover } from './character-list.ui';
 
 @Component({
   selector: 'app-character-list',
@@ -37,7 +37,6 @@ export class CharacterListPage implements OnInit, OnDestroy {
   public searchValue = '';
 
   private character$: Subscription;
-  private hasModal: boolean;
 
   private region: 'gl'|'jp';
 
@@ -46,8 +45,7 @@ export class CharacterListPage implements OnInit, OnDestroy {
     private localStorage: LocalStorageService,
     private router: Router,
     private activatedRoute: ActivatedRoute,
-    private popoverCtrl: PopoverController,
-    private modalCtrl: ModalController
+    private popoverCtrl: PopoverController
   ) {}
 
   ngOnInit() {
@@ -113,35 +111,10 @@ export class CharacterListPage implements OnInit, OnDestroy {
 
   // UI MODIFYING FUNCTIONS
   public async loadCharacterModal(name: string) {
-    if(this.hasModal) { return; }
-
     const character = _.find(this.allCharacters, { name, cat: this.region });
-
     if(!character) { return; }
 
-    this.hasModal = true;
-
-    const modal = await this.modalCtrl.create({
-      component: CharacterModal,
-      componentProps: {
-        character,
-        weapon: this.convertWeaponType(character.weapon)
-      }
-    });
-
-    modal.onDidDismiss().then(() => {
-      this.hasModal = false;
-
-      this.router.navigate([], {
-        relativeTo: this.activatedRoute,
-        queryParams: {
-          filter: this.getCurrentFilter(),
-          region: this.region
-        }
-      });
-    });
-
-    await modal.present();
+    this.dataService.displayCharacter$.next(character);
   }
 
   public async openSort(ev) {

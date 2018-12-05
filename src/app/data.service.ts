@@ -3,7 +3,7 @@
 import YAML from 'js-yaml';
 import axios from 'axios';
 
-import { BehaviorSubject } from 'rxjs';
+import { BehaviorSubject, Subject } from 'rxjs';
 import { Injectable } from '@angular/core';
 
 import { Character } from './models/character';
@@ -30,6 +30,8 @@ export class DataService {
   private items: Item[] = [];
 
   private itemNameHash: any = {};
+
+  public displayCharacter$: Subject<Character> = new Subject<Character>();
 
   constructor() { }
 
